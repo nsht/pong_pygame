@@ -19,7 +19,8 @@ pygame.display.set_caption("Pong")
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
+collison_sound = pygame.mixer.Sound("Pop.ogg")
+score_sound = pygame.mixer.Sound("Coin01.ogg")
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_no):
         super(Player, self).__init__()
@@ -118,6 +119,7 @@ def event_handler(events):
 
 def paddle_collision_handler(pressed_keys):
     if pygame.sprite.collide_rect(player1, ball):
+        collison_sound.play()
         if pressed_keys[K_LEFT]:
             ball.change_heading(LEFT, BOTTOM)
         elif pressed_keys[K_RIGHT]:
@@ -128,6 +130,7 @@ def paddle_collision_handler(pressed_keys):
             ball.change_heading(RIGHT, BOTTOM)
 
     if pygame.sprite.collide_rect(player2, ball):
+        collison_sound.play()
         if pressed_keys[K_a]:
             ball.change_heading(LEFT, TOP)
         elif pressed_keys[K_d]:
@@ -139,10 +142,12 @@ def paddle_collision_handler(pressed_keys):
 
 def calculate_score():
     if ball.rect.bottom == SCREEN_HEIGHT:
+        score_sound.play()
         player1.score += 1
         ball.change_heading(CENTER, TOP)
         ball.reset_position()
     elif ball.rect.top <= 15:
+        score_sound.play()
         player2.score += 1
         ball.change_heading(CENTER, BOTTOM)
         ball.reset_position()
